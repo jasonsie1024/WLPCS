@@ -1,0 +1,83 @@
+{% extends "bootstrap/base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/esm/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+    crossorigin="anonymous"></script>
+{{ moment.include_moment() }}
+<script>
+    var update = function(){
+        document.getElementById("time").innerText = moment().format('LTS');
+    }
+    setInterval(update, 1000);
+</script>
+{% endblock %}
+
+{% block title %}WLPC #000 - {% block page_title %}{% endblock %}{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">WLPC #000</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item {{ 'active' if request.path == '/bulletin' }}">
+                    <a class="nav-link" href="{{ url_for('main.bulletin') }}">Bulletin<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item {{ 'active' if request.path == '/ranking' }}">
+                    <a class="nav-link" href="{{ url_for('main.ranking') }}">Ranking</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Submissions</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Problems</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav my-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" id="time">{{ moment(current_time).format('LTS') }}</a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Guest <span class="caret"></span></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="/signin">Sign in</a>
+                        <a class="dropdown-item" href="">Sign up</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <div class="container" style="width: 90%">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-dismissible alert-{{ message['t'] }}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {{ message['message'] }}
+            <span class="float-right"><strong>{{ moment(message['create_time']).format("hh:mm") }}</strong></span>
+        </div>
+        {% endfor %}
+    </div>
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}

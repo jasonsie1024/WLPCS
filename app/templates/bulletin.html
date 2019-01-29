@@ -1,0 +1,31 @@
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% extends "base.html" %}
+
+{% block page_title %}Bulletin{% endblock %}
+
+{% block page_content %}
+<div class="container" style="width: 90%">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Bulletin</h4>
+            <hr>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.t }}">
+                <span>{{ message.content }}</span>
+                <span class="float-right"><strong>{{ moment(message.create_time).format("hh:mm") }}</strong></span>
+            </div>
+            {% endfor %}
+            {{ 'No message yet!' if messages|length == 0 }}
+        </div>
+    </div><br>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">New Message</h4>
+            <hr>
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div><br>
+</div>
+{% endblock %}
