@@ -5,6 +5,10 @@ from .forms import MessgeForm
 from ..models import Message
 from .. import db
 
+@main.route('/')
+def home():
+    return render_template('home.html', current_time = datetime.utcnow())
+
 @main.route('/bulletin', methods = ['GET', 'POST'])
 def bulletin():
     form = MessgeForm()
@@ -12,14 +16,8 @@ def bulletin():
         message = Message(t = form.t.data, content = form.content.data, create_time = datetime.utcnow())
         db.session.add(message)
         db.session.commit()
-        flash({
-            't': form.t.data,
-            'message': form.content.data,
-            'create_time': datetime.utcnow()
-        })
         return redirect(url_for('main.bulletin'))
     messages = Message.query.order_by(Message.create_time.desc()).all()
-    print(messages)
     return render_template('bulletin.html', current_time = datetime.utcnow(), form = form, messages = messages)
 
 @main.route('/ranking')

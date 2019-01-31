@@ -1,7 +1,7 @@
 {% extends "bootstrap/base.html" %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
 {% endblock %}
 
 {% block scripts %}
@@ -11,6 +11,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
     crossorigin="anonymous"></script>
 {{ moment.include_moment() }}
+{{ pagedown.include_pagedown() }}
 <script>
     var update = function(){
         document.getElementById("time").innerText = moment().format('LTS');
@@ -19,12 +20,12 @@
 </script>
 {% endblock %}
 
-{% block title %}WLPC #000 - {% block page_title %}{% endblock %}{% endblock %}
+{% block title %}{{ config['CONTEST'] }} - {% block page_title %}{% endblock %}{% endblock %}
 
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="/">WLPC #000</a>
+        <a class="navbar-brand" href="/">{{ config['CONTEST'] }}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03"
             aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -51,11 +52,18 @@
                     <a class="nav-link" id="time">{{ moment(current_time).format('LTS') }}</a>
                 </li>
                 <li class="nav-item dropdown active">
+                    {% if current_user.is_authenticated %}
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">{{ current_user.username }} <span class="caret"></span></a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="/signout">Sign out</a>
+                    </div>
+                    {% else %}
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Guest <span class="caret"></span></a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="/signin">Sign in</a>
-                        <a class="dropdown-item" href="">Sign up</a>
+                        <a class="dropdown-item" href="{{ url_for('auth.signin') }}">Sign in</a>
+                        <a class="dropdown-item" href="{{ url_for('auth.signup') }}">Sign up</a>
                     </div>
+                    {% endif %}
                 </li>
             </ul>
         </div>
@@ -74,7 +82,7 @@
         <div class="alert alert-dismissible alert-{{ message['t'] }}">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{ message['message'] }}
-            <span class="float-right"><strong>{{ moment(message['create_time']).format("hh:mm") }}</strong></span>
+            <span class="float-right">{{ moment(message['create_time']).format("hh:mm") }}</span>
         </div>
         {% endfor %}
     </div>

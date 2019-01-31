@@ -2,6 +2,7 @@ import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
+    CONTEST = 'WLPC #000'
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'd9vjegwkcien48hwcmdiw38'
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = int(os.environ.get('MAIL_PORT', '587'))

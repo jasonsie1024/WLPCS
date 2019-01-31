@@ -1,0 +1,16 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "base.html" %}
+
+{% block page_title %}Sign in{% endblock %}
+
+{% block page_content %}
+<div class="container" style="width: 40%; min-width: 400px;">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Sign in</h4>
+            <hr>
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

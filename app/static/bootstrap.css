@@ -66,6 +66,7 @@ body {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 0.875rem;
   font-weight: 400;
+  word-spacing: 0.1rem;
   line-height: 1.5;
   color: #222;
   text-align: left;
@@ -4917,6 +4918,7 @@ input[type="button"].btn-block {
       -ms-flex: 1 1 auto;
           flex: 1 1 auto;
   padding: 1.25rem;
+  font-size: 1rem;
 }
 
 .card-title {
@@ -10772,4 +10774,8 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 
 .modal .close:not(:disabled):not(.disabled):hover, .modal .close:not(:disabled):not(.disabled):focus {
   color: #000;
+}
+
+div p {
+  display: inline;
 }
