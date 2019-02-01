@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7e56f8ee3f2c
+Revision ID: e6b6a3977bf4
 Revises: 
-Create Date: 2019-01-30 21:07:18.267254
+Create Date: 2019-01-31 21:51:45.124275
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7e56f8ee3f2c'
+revision = 'e6b6a3977bf4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,12 +26,18 @@ def upgrade():
     sa.Column('create_time', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
+    op.create_table('settings',
+    sa.Column('setting', sa.String(), nullable=False),
+    sa.Column('value', sa.Text(), nullable=True),
+    sa.PrimaryKeyConstraint('setting')
+    )
+    op.create_index(op.f('ix_settings_setting'), 'settings', ['setting'], unique=False)
     op.create_table('submissions',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('pid', sa.Integer(), nullable=True),
     sa.Column('uid', sa.Integer(), nullable=True),
-    sa.Column('lang', sa.String(), nullable=True),
     sa.Column('code', sa.Text(), nullable=True),
+    sa.Column('create_time', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -39,6 +45,8 @@ def upgrade():
     sa.Column('email', sa.String(length=64), nullable=True),
     sa.Column('username', sa.String(length=64), nullable=True),
     sa.Column('password_hash', sa.String(length=128), nullable=True),
+    sa.Column('status', sa.String(), nullable=True),
+    sa.Column('score', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
@@ -52,5 +60,7 @@ def downgrade():
     op.drop_index(op.f('ix_users_email'), table_name='users')
     op.drop_table('users')
     op.drop_table('submissions')
+    op.drop_index(op.f('ix_settings_setting'), table_name='settings')
+    op.drop_table('settings')
     op.drop_table('messages')
     # ### end Alembic commands ###

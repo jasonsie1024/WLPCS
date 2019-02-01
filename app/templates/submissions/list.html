@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block page_title %}Submissions{% endblock %}
+
+{% block page_content %}
+<div class="container" style="width: 90%">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Submissions</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Problem</th>
+                        <th scope="col">Submitter</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Memory</th>
+                        <th scope="col">Verdict</th>
+                        <th scope="col">Score</th>
+                        <th scope="col">Submit Time</th>
+                    </tr>
+                <tbody>
+                    <tr class="table-default">
+                        <th scope="row"><a href="#">1069</a></th>
+                        <td><a href="#">愛加盟自助餐</a></td>
+                        <td>郝嘉誠</td>
+                        <td>50</td>
+                        <td>80</td>
+                        <td >AC</td>
+                        <td>100</td>
+                        <td>10:23</td>
+                    </tr>
+                    {% for submission in submissions %}
+                    <tr class="table-default">
+                        <th scope="row"><a href="{{ url_for('submission.result', sid = submission.id) }}">{{ submission.id }}</a></th>
+                        <td><a href="#">{{ submission.pid }}</a></td>
+                        <td>{{ user.query.get(submission.uid).username }}</td>
+                        <td>{{ submission.time or '-' }}</td>
+                        <td>{{ submission.memory or '-' }}</td>
+                        <td>{{ submission.verdict }}</td>
+                        <td>{{ submission.score or '-' }}</td>
+                        <td>{{ moment(submission.create_time).format('hh:mm') }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div><br>
+</div>
+{% endblock %}

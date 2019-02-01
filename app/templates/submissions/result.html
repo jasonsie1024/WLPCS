@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{{ super() }}
+<script src="/static/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/tomorrow");
+    editor.session.setMode("ace/mode/c_cpp");
+</script>
+{% endblock %}
+
+{% block page_title %}Result{% endblock %}
+
+{% block page_content %}
+<div class="container" style="width: 90%">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Submission - #{{ submission.id }}</h4>
+            <hr>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Problem</label>
+                        <label class="col-sm-9 col-form-label"><a href="#">{{ submission.pid }}</a></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Submitter</label>
+                        <label class="col-sm-9 col-form-label"><a href="#">{{ user.query.get(submission.uid).username
+                                }}</a></label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Submit Time</label>
+                        <label class="col-sm-9 col-form-label">{{ moment(submission.create_time).format('LTS') }}</label>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Time</label>
+                        <label class="col-sm-9 col-form-label">{{ submission.time or '-' }}</label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Memory</label>
+                        <label class="col-sm-9 col-form-label">{{ submission.memory or '-' }}</label>
+                    </div>
+                    <div class="row">
+                        <label class="col-sm-3 col-form-label">Score</label>
+                        <label class="col-sm-9 col-form-label">{{ submission.score or '-'}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><br>
+    {% if current_user.id == submission.uid or current_user.id == 1 %}
+    <div class="card">
+        <div class="card-body" style="height: 350px">
+            <pre>
+                <div id = "editor">{{ submission.code | replace("<", "&lt;") | replace(">", "&gt;") | safe }}</div>
+            </pre>
+        </div>
+    </div><br>
+    {% endif %}
+</div>
+{% endblock %}

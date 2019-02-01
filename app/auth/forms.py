@@ -20,3 +20,9 @@ class SignupForm(FlaskForm):
     def validate_email(self, field):
         if User.query.filter_by(email = field.data).first():
             raise ValidationError('Email already registered!')
+
+class SettingForm(FlaskForm):
+    username = StringField('Username', [DataRequired(), Length(1, 64)])
+    password = PasswordField('New Password', [DataRequired()])
+    password2 = PasswordField('New Password Confirm', [DataRequired(), EqualTo('password')])
+    submit = SubmitField('Update')

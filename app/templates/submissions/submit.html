@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{{ super() }}
+<script src="/static/ace//ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/tomorrow");
+    editor.session.setMode("ace/mode/c_cpp");
+
+    document.getElementById('editor').style.fontSize='13px';
+
+    var input = $('textarea[name="code"]');
+    input.val(editor.getSession().getValue());
+
+    editor.getSession().on("change", function () {
+        input.val(editor.getSession().getValue());
+    });
+</script>
+{% endblock %}
+
+{% block page_title %}Submit{% endblock %}
+
+{% block page_content %}
+<div class="container" style="width: 90%">
+    <form method="POST">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3">Submit</h4>
+                        <hr>
+                        {{ form.hidden_tag() }}
+                        <div class="row">
+                            <label class="col-sm-4 col-form-label">Problem</label>
+                            <label class="col-sm-8 col-form-label"><a href="#">愛加盟自助餐</a></label>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-4 col-form-label">Time</label>
+                            <label class="col-sm-8 col-form-label">1000 ms</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-sm-4 col-form-label">Memory</label>
+                            <label class="col-sm-8 col-form-label">65536 KiB</label>
+                        </div>
+                        {{ form.submit(class = 'btn float-right') }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body" style="height: 500px">
+                        <div id="editor"></div>
+                        {{ form.code(style='display: none;') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

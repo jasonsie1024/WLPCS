@@ -1,7 +1,7 @@
 {% extends "bootstrap/base.html" %}
 
 {% block styles %}
-<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
 {% endblock %}
 
 {% block scripts %}
@@ -33,14 +33,14 @@
 
         <div class="collapse navbar-collapse" id="navbarColor03">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item {{ 'active' if request.path == '/bulletin' }}">
+                <li class="nav-item {{ 'active' if request.path.startswith('/bulletin') }}">
                     <a class="nav-link" href="{{ url_for('main.bulletin') }}">Bulletin<span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item {{ 'active' if request.path == '/ranking' }}">
+                <li class="nav-item {{ 'active' if request.path.startswith('/ranking') }}">
                     <a class="nav-link" href="{{ url_for('main.ranking') }}">Ranking</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Submissions</a>
+                <li class="nav-item {{ 'active' if request.path.startswith('/submissions') }}">
+                    <a class="nav-link" href="{{ url_for('submission.list') }}">Submissions</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Problems</a>
@@ -53,9 +53,13 @@
                 </li>
                 <li class="nav-item dropdown active">
                     {% if current_user.is_authenticated %}
-                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">{{ current_user.username }} <span class="caret"></span></a>
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">{{
+                        current_user.username }} <span class="caret"></span></a>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="/signout">Sign out</a>
+                        <a class="dropdown-item" href="{{ url_for('auth.settings') }}">Settings</a>
+                        <a class="dropdown-item" href="/signout">Submissions</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url_for('auth.signout') }}">Sign out</a>
                     </div>
                     {% else %}
                     <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="themes">Guest <span class="caret"></span></a>
@@ -79,10 +83,9 @@
 <div class="container">
     <div class="container" style="width: 90%">
         {% for message in get_flashed_messages() %}
-        <div class="alert alert-dismissible alert-{{ message['t'] }}">
+        <div class="alert alert-dismissible alert-light">
             <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message['message'] }}
-            <span class="float-right">{{ moment(message['create_time']).format("hh:mm") }}</span>
+            {{ message }}
         </div>
         {% endfor %}
     </div>

@@ -66,7 +66,6 @@ body {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 0.875rem;
   font-weight: 400;
-  word-spacing: 0.1rem;
   line-height: 1.5;
   color: #222;
   text-align: left;
@@ -10778,4 +10777,12 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
 
 div p {
   display: inline;
+}
+
+#editor { 
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
 }

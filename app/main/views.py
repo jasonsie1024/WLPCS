@@ -1,13 +1,31 @@
 from datetime import datetime
 from flask import render_template, session, redirect, url_for, flash
+from markdown import markdown
 from . import main
-from .forms import MessgeForm
-from ..models import Message
+from .forms import MessgeForm, SettingForm
+from ..models import Message, Setting
 from .. import db
 
-@main.route('/')
+@main.route('/', methods = ['GET', 'POST'])
 def home():
-    return render_template('home.html', current_time = datetime.utcnow())
+    form = SettingForm()
+    if form.validate_on_submit():
+        about = Setting.get_or_create(setting = 'about')
+        about.value = form.about.data
+        db.session.commit()
+
+        schedule = Setting.get_or_create(setting = 'schedule')
+        schedule.value = form.schedule.data
+        db.session.commit()
+
+        return redirect(url_for('main.home'))
+
+    about = form.about.data = Setting.get_or_create(setting = 'about').value
+    schedule = form.schedule.data = Setting.get_or_create(setting = 'schedule').value
+    about = markdown(about, output_format = 'html')
+    schedule = markdown(schedule, output_format = 'html')
+
+    return render_template('home.html', current_time = datetime.utcnow(), form = form, about = about, schedule = schedule)
 
 @main.route('/bulletin', methods = ['GET', 'POST'])
 def bulletin():

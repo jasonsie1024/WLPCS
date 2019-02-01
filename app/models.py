@@ -1,8 +1,28 @@
 from . import db, login_manager
 from flask_login import UserMixin
 from markdown import markdown
+from hashlib import md5
 from werkzeug.security import generate_password_hash, check_password_hash
 import bleach
+
+class Setting(db.Model):
+    __tablename__ = 'settings'
+    setting = db.Column(db.String, primary_key = True, index = True)
+    value = db.Column(db.Text)
+
+    def __repr__(self):
+        return '<Setting %r>' % self.setting
+    
+    def get_or_create(**kwargs):
+        instance = Setting.query.filter_by(**kwargs).first()
+        if instance:
+            return instance
+        else:
+            instance = Setting(**kwargs)
+            instance.value = ''
+            db.session.add(instance)
+            db.session.commit()
+            return instance
 
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
@@ -38,6 +58,7 @@ class Message(db.Model):
     content_html = db.Column(db.Text)
     t = db.Column(db.String(20))
     create_time = db.Column(db.DateTime)
+    
 
     def __repr__(self):
         return "<Message %r>" % self.content
@@ -54,8 +75,19 @@ class Submission(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     pid = db.Column(db.Integer)
     uid = db.Column(db.Integer)
-    lang = db.Column(db.String)
     code = db.Column(db.Text)
+    code_hash = db.Column(db.String)
+    time = db.Column(db.Integer)
+    memory = db.Column(db.Integer)
+    verdict = db.Column(db.String(10))
+    score = db.Column(db.Integer)
+    create_time = db.Column(db.DateTime)
 
-    def __repr__():
+    def __repr__(self):
         return '<Submission %r>' % id
+    
+    @staticmethod
+    def on_change_code(target, value, oldvalue, initiator):
+        target.code_hash = md5(value.encode()).hexdigest()
+    
+db.event.listen(Submission.code, 'set', Submission.on_change_code)
