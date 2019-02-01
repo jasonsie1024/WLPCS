@@ -42,8 +42,8 @@
                 <li class="nav-item {{ 'active' if request.path.startswith('/submissions') }}">
                     <a class="nav-link" href="{{ url_for('submission.list') }}">Submissions</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Problems</a>
+                <li class="nav-item {{ 'active' if request.path.startswith('/problems') }}">
+                    <a class="nav-link" href="{{ url_for('problem.problems') }}">Problems</a>
                 </li>
             </ul>
 
@@ -57,7 +57,7 @@
                         current_user.username }} <span class="caret"></span></a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="{{ url_for('auth.settings') }}">Settings</a>
-                        <a class="dropdown-item" href="/signout">Submissions</a>
+                        <a class="dropdown-item" href="{{ url_for('submission.list_by_user', uid = current_user.id) }}">Submissions</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url_for('auth.signout') }}">Sign out</a>
                     </div>

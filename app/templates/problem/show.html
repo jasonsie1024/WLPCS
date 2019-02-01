@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+
+{% block page_title %}{{ problem.abbr }}{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+{% endblock %}
+
+{% block page_content %}
+<div class="container" style="width: 90%">
+    <div class="card">
+        <div class="card-body content">
+            <h4 class="card-title mb-3">{{ problem.title }}</h4>
+            <hr>
+            {{ (problem.content_html or '') | safe }}
+        </div>
+    </div><br>
+    {% if current_user.id == 1 %}
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Manage</h4>
+            <hr>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        {{ form.abbr.label }}{{ form.abbr(class='form-control') }}
+                    </div>
+                    <div class="form-group col-sm-9">
+                        {{ form.title.label }}{{ form.title(class='form-control') }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form.content.label }}{{ form.content(class='form-control', style='height: 500px;') }}
+                </div>
+                {{ form.submit(class='btn float-right') }}
+            </form>
+        </div>
+    </div><br>
+    {% endif %}
+</div>
+{% endblock %}

@@ -65,7 +65,7 @@ body {
   margin: 0;
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: normal;
   line-height: 1.5;
   color: #222;
   text-align: left;
@@ -89,8 +89,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p {
-  margin-top: 0;
+  font-size: 1.05rem;
+  margin-top: 1rem;
   margin-bottom: 1rem;
+  text-indent: 2.10rem;
+}
+
+div.content strong {
+  color: #158CBA;
 }
 
 abbr[title],
@@ -205,8 +211,13 @@ figure {
 }
 
 img {
-  vertical-align: middle;
   border-style: none;
+  display: block;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 50%;
 }
 
 svg {
@@ -5214,6 +5225,7 @@ input[type="button"].btn-block {
   padding-left: 0;
   list-style: none;
   border-radius: 0.25rem;
+  justify-content: center;
 }
 
 .page-link {
@@ -10775,7 +10787,7 @@ a.list-group-item-danger.active:hover, a.list-group-item-danger.active:focus {
   color: #000;
 }
 
-div p {
+span p {
   display: inline;
 }
 

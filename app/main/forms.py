@@ -12,7 +12,7 @@ class MessgeForm(FlaskForm):
     submit = SubmitField('Send')
 
     def validate_submit(self, field):
-        if not current_user.is_authenticated or current_user.id != 1:
+        if current_user.id != 1:
             raise ValidationError('Only administrator can send message!')
 
 class SettingForm(FlaskForm):
@@ -21,5 +21,5 @@ class SettingForm(FlaskForm):
     submit = SubmitField('Submit')
 
     def validate_submit(self, field):
-        if not current_user.is_authenticated or current_user.id != 1:
+        if current_user.id != 1:
             raise ValidationError('Forbidden!')

@@ -1,9 +1,11 @@
 from . import db, login_manager
 from flask_login import UserMixin
-from markdown import markdown
 from hashlib import md5
 from werkzeug.security import generate_password_hash, check_password_hash
-import bleach
+import bleach, markdown
+
+allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'br', 'p', 'img']
+md = markdown.Markdown(extensions = ['mdx_math'])
 
 class Setting(db.Model):
     __tablename__ = 'settings'
@@ -65,8 +67,7 @@ class Message(db.Model):
     
     @staticmethod
     def on_change_content(target, value, oldvalue, initiator):
-        allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'u;', 'h1', 'h2', 'h3', 'br', 'p']
-        target.content_html = bleach.linkify(bleach.clean(markdown(value, output_format = 'html'), tags = allowed_tags))
+        target.content_html = bleach.linkify(bleach.clean(md.convert(value), tags = allowed_tags))
     
 db.event.listen(Message.content, 'set', Message.on_change_content)
 
@@ -91,3 +92,29 @@ class Submission(db.Model):
         target.code_hash = md5(value.encode()).hexdigest()
     
 db.event.listen(Submission.code, 'set', Submission.on_change_code)
+
+class Problem(db.Model):
+    __tablename__ = 'problems'
+    id = db.Column(db.Integer, primary_key = True)
+    title = db.Column(db.String)
+    abbr = db.Column(db.String)
+    content = db.Column(db.Text)
+    content_html = db.Column(db.Text)
+    time_limit = db.Column(db.Integer)
+    memory_limit = db.Column(db.Integer)
+    scoring_script = db.Column(db.Text)
+    test_datas = db.relationship('TestData', backref = 'problem')
+
+    @staticmethod
+    def on_change_content(target, value, oldvalue, initiator):
+        target.content_html = md.convert(value)
+
+db.event.listen(Problem.content, 'set', Problem.on_change_content)
+
+class TestData(db.Model):
+    __tablename__ = 'testdatas'
+    id = db.Column(db.Integer, primary_key = True)
+    pid = db.Column(db.Integer, db.ForeignKey('problems.id'))
+    score = db.Column(db.Integer)
+    input = db.Column(db.Text)
+    answer = db.Column(db.Text)

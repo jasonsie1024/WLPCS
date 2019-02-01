@@ -3,6 +3,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
     CONTEST = 'WLPC #000'
+    ITEMS_PER_PAGE = 20
+    ALLOWED_TAGS = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'br', 'p']
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'd9vjegwkcien48hwcmdiw38'
     MAIL_SERVER = os.environ.get('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = int(os.environ.get('MAIL_PORT', '587'))

@@ -36,4 +36,7 @@ def create_app(config_name):
     from .submission import submission as submission_blueprint
     app.register_blueprint(submission_blueprint)
 
+    from .problem import problem as problem_blueprint
+    app.register_blueprint(problem_blueprint)
+
     return app

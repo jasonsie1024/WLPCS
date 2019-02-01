@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, current_app
 from flask_login import login_required, current_user
 from datetime import datetime
 from hashlib import md5
@@ -9,9 +9,19 @@ from ..models import Submission, User
 
 @submission.route('/submissions')
 def list():
-    submissions = Submission.query.order_by(Submission.id.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    pagination = Submission.query.order_by(Submission.id.desc()).paginate(page, per_page = current_app.config['ITEMS_PER_PAGE'], error_out=True)
+    submissions = pagination.items
     user = User
-    return render_template('submissions/list.html', current_time = datetime.utcnow(), submissions = submissions, user = user)
+    return render_template('submissions/list.html', current_time = datetime.utcnow(), submissions = submissions, pagination = pagination, user = user)
+
+@submission.route('/<uid>/submissions')
+def list_by_user(uid):
+    page = request.args.get('page', 1, type=int)
+    pagination = Submission.query.order_by(Submission.id.desc()).filter_by(uid = uid).paginate(page, per_page = current_app.config['ITEMS_PER_PAGE'], error_out = True)
+    submissions = pagination.items
+    user = User.query.get_or_404(uid)
+    return render_template('submissions/list_by_user.html', current_time = datetime.utcnow(), submissions = submissions, pagination = pagination, user = user)
 
 @submission.route('/submissions/<sid>')
 def result(sid):
