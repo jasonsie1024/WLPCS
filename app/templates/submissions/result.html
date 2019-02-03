@@ -15,36 +15,37 @@
 {% block page_content %}
 <div class="container" style="width: 90%">
     <div class="row">
-        <div class="col-lg-5">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Submission - #{{ submission.id }}</h4>
                     <hr>
                     <div class="row">
-                        <label class="col-sm-5 col-form-label">Problem</label>
-                        <label class="col-sm-7 col-form-label"><a href="#">{{ submission.pid }}</a></label>
+                        <label class="col-sm-4 col-form-label">Problem</label>
+                        <label class="col-sm-8 col-form-label"><a href="#">{{ problem.title }}</a></label>
                     </div>
                     <div class="row">
-                        <label class="col-sm-5 col-form-label">Submitter</label>
-                        <label class="col-sm-7 col-form-label"><a href="{{ url_for('submission.list_by_user', uid = submission.uid) }}">{{ user.query.get(submission.uid).username
+                        <label class="col-sm-4 col-form-label">Submitter</label>
+                        <label class="col-sm-8 col-form-label"><a href="{{ url_for('submission.list_by_user', uid = submission.uid) }}">{{
+                                user.username
                                 }}</a></label>
                     </div>
                     <div class="row">
-                        <label class="col-sm-5 col-form-label">Submit Time</label>
-                        <label class="col-sm-7 col-form-label">{{ moment(submission.create_time).format('LTS') }}</label>
+                        <label class="col-sm-4 col-form-label">Submit Time</label>
+                        <label class="col-sm-8 col-form-label">{{ moment(submission.create_time).format('LTS') }}</label>
                     </div>
                     <div class="row">
-                        <label class="col-sm-5 col-form-label">Verdict</label>
-                        <label class="col-sm-7 col-form-label">{{ submission.verdict or '-' }}</label>
+                        <label class="col-sm-4 col-form-label">Verdict</label>
+                        <label class="col-sm-8 col-form-label">{{ submission.verdict or '-' }}</label>
                     </div>
                     <div class="row">
-                        <label class="col-sm-5 col-form-label">Score</label>
-                        <label class="col-sm-7 col-form-label">{{ submission.score or '-' }}</label>
+                        <label class="col-sm-4 col-form-label">Score</label>
+                        <label class="col-sm-8 col-form-label">{{ submission.score or 0 }} / {{ problem.total_score }}</label>
                     </div>
                 </div>
             </div><br>
         </div>
-        <div class="col-lg-7">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-3">Tasks</h4>
@@ -59,27 +60,15 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for data in testdata %}
                             <tr>
-                                <th scope="row">1</th>
-                                <td>60</td>
-                                <td>60</td>
-                                <td>Accepted</td>
-                                <td>100</td>
+                                <th scope="row">{{ loop.index }}</th>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>Pending</td>
+                                <td>0 / {{ data.score }}</td>
                             </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>60</td>
-                                <td>60</td>
-                                <td>Accepted</td>
-                                <td>100</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>60</td>
-                                <td>60</td>
-                                <td>Accepted</td>
-                                <td>100</td>
-                            </tr>
+                            {% endfor %}
                     </table>
                 </div>
             </div><br>

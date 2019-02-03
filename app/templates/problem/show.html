@@ -4,8 +4,18 @@
 {% block page_title %}{{ problem.abbr }}{% endblock %}
 
 {% block scripts %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/styles/tomorrow.min.css">
 {{ super() }}
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.14.2/highlight.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('code').forEach((block) => {
+            hljs.highlightBlock(block);
+        });
+    });
+</script>
 {% endblock %}
 
 {% block page_content %}
@@ -14,7 +24,14 @@
         <div class="card-body content">
             <h4 class="card-title mb-3">{{ problem.title }}</h4>
             <hr>
-            {{ (problem.content_html or '') | safe }}
+            {{ problem.content_html | safe }}
+            <hr>
+            <div class="row">
+                <div class="col-sm-4">Total Score:　{{ problem.total_score }}</div>
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4"><a href="{{ url_for('submission.submit', pid = problem.id) }}"><button class="btn float-right">Submit
+                            Solution</button></a></div>
+            </div>
         </div>
     </div><br>
     {% if current_user.id == 1 %}
@@ -25,10 +42,10 @@
             <form method="POST">
                 {{ form.hidden_tag() }}
                 <div class="row">
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-2">
                         {{ form.abbr.label }}{{ form.abbr(class='form-control') }}
                     </div>
-                    <div class="form-group col-sm-9">
+                    <div class="form-group col-sm-10">
                         {{ form.title.label }}{{ form.title(class='form-control') }}
                     </div>
                 </div>
@@ -39,6 +56,36 @@
             </form>
         </div>
     </div><br>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title mb-3">Test Data</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Time Limit</th>
+                        <th scope="col">Memory Limit</th>
+                        <th scope="col">Score</th>
+                        <th scope="col">Manage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for data in testdata %}
+                    <tr>
+                        <th scope="row">{{ loop.index }}</th>
+                        <td>{{ data.time_limit }}</td>
+                        <td>{{ data.memory_limit }}</td>
+                        <td>{{ data.score }}</td>
+                        <td><a href="{{ url_for('problem.testdata', tid = data.id) }}">Manage</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <hr>
+            <a href="{{ url_for('problem.new_testdata', pid = problem.id) }}"><button class="btn float-right">Add</button></a>
+        </div>
+    </div><br>
+
     {% endif %}
 </div>
 {% endblock %}

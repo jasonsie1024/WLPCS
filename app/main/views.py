@@ -4,7 +4,7 @@ from markdown import markdown
 from . import main
 from .forms import MessgeForm, SettingForm
 from ..models import Message, Setting
-from .. import db
+from .. import db, socketio
 
 @main.route('/', methods = ['GET', 'POST'])
 def home():
@@ -34,6 +34,7 @@ def bulletin():
         message = Message(t = form.t.data, content = form.content.data, create_time = datetime.utcnow())
         db.session.add(message)
         db.session.commit()
+        socketio.emit('message', {'t': message.t, 'content': message.content_html, 'create_time': message.create_time.strftime("%Y/%m/%d %H:%M:%S")})
         return redirect(url_for('main.bulletin'))
     messages = Message.query.order_by(Message.create_time.desc()).all()
     return render_template('bulletin.html', current_time = datetime.utcnow(), form = form, messages = messages)

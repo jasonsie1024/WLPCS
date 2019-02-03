@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import bleach, markdown
 
 allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code', 'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul', 'h1', 'h2', 'h3', 'br', 'p', 'img']
-md = markdown.Markdown(extensions = ['mdx_math'])
+md = markdown.Markdown(extensions = ['mdx_math', 'fenced_code'])
 
 class Setting(db.Model):
     __tablename__ = 'settings'
@@ -32,7 +32,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique = True, index = True)
     username = db.Column(db.String(64), index = True)
     password_hash = db.Column(db.String(128))
-    status = db.Column(db.String)
+    status = db.Column(db.Text)
     score = db.Column(db.Integer)
     
     def __repr__(self):
@@ -100,8 +100,7 @@ class Problem(db.Model):
     abbr = db.Column(db.String)
     content = db.Column(db.Text)
     content_html = db.Column(db.Text)
-    time_limit = db.Column(db.Integer)
-    memory_limit = db.Column(db.Integer)
+    total_score = db.Column(db.Integer)
     scoring_script = db.Column(db.Text)
     test_datas = db.relationship('TestData', backref = 'problem')
 
@@ -115,6 +114,8 @@ class TestData(db.Model):
     __tablename__ = 'testdatas'
     id = db.Column(db.Integer, primary_key = True)
     pid = db.Column(db.Integer, db.ForeignKey('problems.id'))
-    score = db.Column(db.Integer)
+    time_limit = db.Column(db.Integer)
+    memory_limit = db.Column(db.Integer)
     input = db.Column(db.Text)
     answer = db.Column(db.Text)
+    score = db.Column(db.Integer)

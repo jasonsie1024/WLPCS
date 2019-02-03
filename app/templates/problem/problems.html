@@ -13,6 +13,7 @@
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col" style="width:70%;">Title</th>
+                        <th scope="col">Score</th>
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
@@ -21,6 +22,7 @@
                     <tr>
                         <th>{{ problem.abbr }}</th>
                         <td><a href="{{ url_for('problem.show', pid = problem.id) }}">{{ problem.title }}</a></td>
+                        <td>{{ problem.total_score }}</td>
                         <td>-</td>
                     </tr>
                     {% endfor %}
